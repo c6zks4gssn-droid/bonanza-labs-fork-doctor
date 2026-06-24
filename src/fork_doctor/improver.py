@@ -40,7 +40,9 @@ def apply_improvements(
     return applied
 
 
-def _apply_check(repo_dir: str | Path, check: str, language: str, fork_full: str, dry_run: bool) -> None:
+def _apply_check(
+    repo_dir: str | Path, check: str, language: str, fork_full: str, dry_run: bool
+) -> None:
     """Apply a single check improvement."""
     template_map = {
         "ci": "ci.yml.j2",

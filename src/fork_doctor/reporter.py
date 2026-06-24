@@ -36,7 +36,9 @@ def print_report(results: dict[str, bool], owner: str, repo: str, language: str)
     """Print a rich-formatted report to the console."""
     console = Console()
 
-    table = Table(title=f"📊 Fork Doctor Report: {owner}/{repo}", show_header=True, header_style="bold cyan")
+    table = Table(
+        title=f"📊 Fork Doctor Report: {owner}/{repo}", show_header=True, header_style="bold cyan"
+    )
     table.add_column("Status", justify="center")
     table.add_column("Check")
 

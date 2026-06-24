@@ -1,6 +1,6 @@
 """Fork Doctor — Automated fork analysis and structural improvement for GitHub repos."""
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __all__ = ["ForkDoctor"]
 
 from fork_doctor.analyzer import analyze_repo
@@ -42,7 +42,6 @@ class ForkDoctor:
         )
         self._repo_dir = repo_dir
         self._fork_full = fork_full
-        lang = self.language_override or detect_language(repo_dir)
         return analyze_repo(repo_dir)
 
     def improve(self) -> list[str]:
@@ -68,5 +67,4 @@ class ForkDoctor:
             owner, repo, fork=False, dry_run=self.dry_run, verbose=self.verbose
         )
         self._repo_dir = repo_dir
-        lang = self.language_override or detect_language(repo_dir)
         return analyze_repo(repo_dir)

@@ -2,15 +2,12 @@
 
 import shutil
 import subprocess
-import sys
 import tempfile
 import re
-from pathlib import Path
 from typing import Optional
 
 import typer
 from rich.console import Console
-from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
@@ -54,9 +51,9 @@ def _gh_fork(owner: str, repo: str) -> str:
     r = _run(f"gh repo fork {owner}/{repo} --clone=false", check=False)
     # gh repo fork outputs a full URL like https://github.com/owner/repo
     # Extract owner/repo from the URL
-    url_match = re.search(r'https://github\.com/([^/]+/[^/\s]+)', r.stdout.strip())
+    url_match = re.search(r"https://github\.com/([^/]+/[^/\s]+)", r.stdout.strip())
     if url_match:
-        return url_match.group(1).rstrip(']')
+        return url_match.group(1).rstrip("]")
     # Fallback: parse owner/repo from any format
     matches = re.findall(r"([\w.-]+/[\w.-]+)", r.stdout.strip())
     if matches:
@@ -116,7 +113,9 @@ def version_callback(value: bool):
 
 @app.callback()
 def main_callback(
-    version: bool = typer.Option(None, "--version", "-v", help="Show version.", callback=version_callback, is_eager=True),
+    version: bool = typer.Option(
+        None, "--version", "-v", help="Show version.", callback=version_callback, is_eager=True
+    ),
 ):
     """🏥 Fork Doctor — Automated fork analysis and structural improvement."""
 
@@ -124,7 +123,12 @@ def main_callback(
 @app.command()
 def analyze(
     repo_url: str = typer.Argument(..., help="GitHub repo URL"),
-    language: Optional[str] = typer.Option(None, "--language", "-l", help="Override language detection (python/javascript/typescript/go/rust)"),
+    language: Optional[str] = typer.Option(
+        None,
+        "--language",
+        "-l",
+        help="Override language detection (python/javascript/typescript/go/rust)",
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-V", help="Show detailed output"),
 ):
     """Fork repo and analyze what's missing."""
@@ -147,7 +151,9 @@ def analyze(
 
     missing = [c for c in CHECKS if not results[c]]
     score = len(CHECKS) - len(missing)
-    console.print(f"\n[bold]{score}/{len(CHECKS)}[/bold] checks present, [bold red]{len(missing)}[/bold red] missing")
+    console.print(
+        f"\n[bold]{score}/{len(CHECKS)}[/bold] checks present, [bold red]{len(missing)}[/bold red] missing"
+    )
 
     shutil.rmtree(repo_dir)
 
@@ -155,7 +161,9 @@ def analyze(
 @app.command()
 def improve(
     repo_url: str = typer.Argument(..., help="GitHub repo URL"),
-    language: Optional[str] = typer.Option(None, "--language", "-l", help="Override language detection"),
+    language: Optional[str] = typer.Option(
+        None, "--language", "-l", help="Override language detection"
+    ),
     dry_run: bool = typer.Option(False, "--dry-run", help="Preview changes without pushing"),
     verbose: bool = typer.Option(False, "--verbose", "-V", help="Show detailed output"),
 ):
@@ -168,7 +176,9 @@ def improve(
     results = analyze_repo(repo_dir)
     missing = [c for c in CHECKS if not results[c]]
 
-    with Progress(SpinnerColumn(), TextColumn("[progress.description]{task.description}"), console=console) as progress:
+    with Progress(
+        SpinnerColumn(), TextColumn("[progress.description]{task.description}"), console=console
+    ) as progress:
         task = progress.add_task(f"🔧 Applying {len(missing)} improvements...", total=len(missing))
         for check in missing:
             progress.update(task, description=f"➕ Adding {CHECK_NAMES[check]}...")
@@ -180,10 +190,13 @@ def improve(
     if missing and not dry_run:
         console.print("\n🚀 Pushing branch and creating PR...")
         _run("git push -u origin improvements/fork-doctor", cwd=repo_dir)
-        body = "Automated improvements by fork-doctor:\n" + "\n".join(f"- {CHECK_NAMES[c]}" for c in missing)
+        body = "Automated improvements by fork-doctor:\n" + "\n".join(
+            f"- {CHECK_NAMES[c]}" for c in missing
+        )
         r = _run(
             f'gh pr create --title "🏥 Fork Doctor: structural improvements" --body "{body}" --base main',
-            cwd=repo_dir, check=False
+            cwd=repo_dir,
+            check=False,
         )
         if r.returncode == 0:
             console.print(f"✅ PR created: [green]{r.stdout.strip()}[/green]")
@@ -200,7 +213,9 @@ def improve(
 @app.command()
 def report(
     repo_url: str = typer.Argument(..., help="GitHub repo URL"),
-    language: Optional[str] = typer.Option(None, "--language", "-l", help="Override language detection"),
+    language: Optional[str] = typer.Option(
+        None, "--language", "-l", help="Override language detection"
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-V", help="Show detailed output"),
 ):
     """Generate a report without forking."""
@@ -211,7 +226,9 @@ def report(
 
     results = analyze_repo(repo_dir)
 
-    table = Table(title=f"📊 Fork Doctor Report: {owner}/{repo}", show_header=True, header_style="bold cyan")
+    table = Table(
+        title=f"📊 Fork Doctor Report: {owner}/{repo}", show_header=True, header_style="bold cyan"
+    )
     table.add_column("Status", justify="center")
     table.add_column("Check")
     for check in CHECKS:

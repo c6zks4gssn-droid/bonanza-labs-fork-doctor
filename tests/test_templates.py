@@ -35,7 +35,9 @@ def test_all_templates_exist():
         assert (TEMPLATE_DIR / name).exists(), f"Missing template: {name}"
 
 
-@pytest.mark.parametrize("language", ["python", "javascript", "typescript", "go", "rust", "unknown"])
+@pytest.mark.parametrize(
+    "language", ["python", "javascript", "typescript", "go", "rust", "unknown"]
+)
 def test_ci_template_renders(env, language):
     tmpl = env.get_template("ci.yml.j2")
     result = tmpl.render(language=language, fork_full="user/repo", repo_name="repo")

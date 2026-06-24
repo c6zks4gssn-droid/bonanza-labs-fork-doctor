@@ -1,9 +1,5 @@
 """Tests for the analyzer module."""
 
-import os
-import tempfile
-from pathlib import Path
-
 import pytest
 
 from fork_doctor.analyzer import analyze_repo, CHECKS, CHECK_NAMES
@@ -56,7 +52,9 @@ def test_analyze_empty_repo(empty_repo):
 
 def test_analyze_full_repo(full_repo):
     results = analyze_repo(full_repo)
-    assert all(results.values()), f"Full repo should pass all checks, failed: {[k for k, v in results.items() if not v]}"
+    assert all(results.values()), (
+        f"Full repo should pass all checks, failed: {[k for k, v in results.items() if not v]}"
+    )
 
 
 def test_analyze_partial_repo(tmp_path):

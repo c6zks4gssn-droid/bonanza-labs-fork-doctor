@@ -2,7 +2,7 @@
 
 # 🏥 Fork Doctor
 
-[![CI](https://github.com/fork-doctor/fork-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/fork-doctor/fork-doctor/actions)
+[![CI](https://github.com/c6zks4gssn-droid/bonanza-labs-fork-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/c6zks4gssn-droid/bonanza-labs-fork-doctor/actions)
 [![PyPI](https://img.shields.io/pypi/v/fork-doctor)](https://pypi.org/project/fork-doctor/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/pypi/dm/fork-doctor)](https://pypi.org/project/fork-doctor/)

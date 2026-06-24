@@ -3,9 +3,19 @@
 from pathlib import Path
 
 CHECKS = [
-    "ci", "codeql", "dependabot", "precommit", "issue_templates",
-    "pr_templates", "contributing", "semver", "devcontainer",
-    "readme_badges", "license", "perf_bench", "sbom",
+    "ci",
+    "codeql",
+    "dependabot",
+    "precommit",
+    "issue_templates",
+    "pr_templates",
+    "contributing",
+    "semver",
+    "devcontainer",
+    "readme_badges",
+    "license",
+    "perf_bench",
+    "sbom",
 ]
 
 CHECK_NAMES = {
@@ -36,21 +46,21 @@ def analyze_repo(repo_dir: str) -> dict[str, bool]:
     workflows_dir = d / ".github/workflows"
 
     # CI
-    results["ci"] = _check_exists(repo_dir, ".github/workflows") and any(workflows_dir.glob("*.yml"))
+    results["ci"] = _check_exists(repo_dir, ".github/workflows") and any(
+        workflows_dir.glob("*.yml")
+    )
 
     # CodeQL
     if results["ci"]:
         results["codeql"] = any(
-            "codeql" in f.read_text(errors="ignore").lower()
-            for f in workflows_dir.glob("*.yml")
+            "codeql" in f.read_text(errors="ignore").lower() for f in workflows_dir.glob("*.yml")
         )
     else:
         results["codeql"] = False
 
     # Dependabot
-    results["dependabot"] = (
-        _check_exists(repo_dir, ".github/dependabot.yml")
-        or _check_exists(repo_dir, ".github/dependabot.yaml")
+    results["dependabot"] = _check_exists(repo_dir, ".github/dependabot.yml") or _check_exists(
+        repo_dir, ".github/dependabot.yaml"
     )
 
     # Pre-commit
@@ -61,10 +71,9 @@ def analyze_repo(repo_dir: str) -> dict[str, bool]:
     results["issue_templates"] = issue_dir.exists() and len(list(issue_dir.glob("*"))) > 0
 
     # PR templates
-    results["pr_templates"] = (
-        _check_exists(repo_dir, ".github/PULL_REQUEST_TEMPLATE.md")
-        or _check_exists(repo_dir, ".github/pull_request_template.md")
-    )
+    results["pr_templates"] = _check_exists(
+        repo_dir, ".github/PULL_REQUEST_TEMPLATE.md"
+    ) or _check_exists(repo_dir, ".github/pull_request_template.md")
 
     # Contributing
     results["contributing"] = _check_exists(repo_dir, "CONTRIBUTING.md")
@@ -72,8 +81,7 @@ def analyze_repo(repo_dir: str) -> dict[str, bool]:
     # Semver / release
     if results["ci"]:
         results["semver"] = any(
-            "release" in f.read_text(errors="ignore").lower()
-            for f in workflows_dir.glob("*.yml")
+            "release" in f.read_text(errors="ignore").lower() for f in workflows_dir.glob("*.yml")
         )
     else:
         results["semver"] = False
@@ -112,8 +120,7 @@ def analyze_repo(repo_dir: str) -> dict[str, bool]:
     # SBOM
     if results["ci"]:
         results["sbom"] = any(
-            "sbom" in f.read_text(errors="ignore").lower()
-            for f in workflows_dir.glob("*.yml")
+            "sbom" in f.read_text(errors="ignore").lower() for f in workflows_dir.glob("*.yml")
         )
     else:
         results["sbom"] = False
